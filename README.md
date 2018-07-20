@@ -3,7 +3,7 @@ index_map is designed to accelerate std::unordered_map (mainly for huge values e
 It looks similar with std::unordered_map, but with some differences:
 1) Only accept integer type as the key
 2) Some interface may be not implemented yet (especially for c++17 and c++20)
-3) Make value continuously stored in memory to make value iteration much more efficient 
+3) Make values continuously stored in memory to make value iteration much more efficient 
 
 Here is some performance comparison (latency in micro-second, lower is better, tested on Xeon 6140): 
 
