@@ -1,8 +1,10 @@
 # index_map
 index_map is designed to accelerate std::unordered_map when the key is integer type. 
+
 Here are 2 different implementations:
 1) index_map_for_find.h: optimized for find interface, and the map is rarely updated.
-2) index_map_for_iteration.h: optimized for value iteration.
+2) index_map_for_iteration.h: optimized for value iteration. 
+
 It looks similar with std::unordered_map, but with some differences:
 1) Only accept integer type as the key
 2) Some interface may be not implemented yet (especially for c++17 and c++20)
