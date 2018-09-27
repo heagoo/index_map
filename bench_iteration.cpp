@@ -1,7 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <cstdlib>
-#include "index_map.h"
+#include "index_map_for_iteration.h"
 #include "timer.h"
 
 struct Data {
