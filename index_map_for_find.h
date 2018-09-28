@@ -56,6 +56,10 @@ public:
     }
   }
 
+  // Insert without checking the key exist or not
+  void insert_nocheck(const K_T &key, const V_T &val) {
+    add_record(key, val);
+  }
 
   // Return the index of the found key&value, -1 means not found
   int find(const K_T &key) const {
@@ -137,13 +141,8 @@ private:
 
     // Enlarge the capacity
     if (record_num >= record_capacity) {
-      std::pair<K_T, V_T> *old_records = records;
-      record_capacity = (record_capacity == 0 ? 2 : record_capacity * 2);
-      records = new std::pair<K_T, V_T>[record_capacity];
-      for (int i = 0; i < record_num; ++i) {
-        records[i] = old_records[i];
-      }
-      delete[] old_records;
+      int delta = (record_capacity == 0 ? 2 : record_capacity);
+      enlarge_buffer(delta);
     }
 
     int idx = record_num;
@@ -158,6 +157,17 @@ private:
     }
 
     return idx;
+  }
+
+  // Expand record capacity by delta
+  void enlarge_buffer(int delta) {
+    std::pair<K_T, V_T> *old_records = records;
+    record_capacity += delta;
+    records = new std::pair<K_T, V_T>[record_capacity];
+    for (int i = 0; i < record_num; ++i) {
+      records[i] = old_records[i];
+    }
+    delete[] old_records;
   }
 
 private:
@@ -644,17 +654,16 @@ private:
 
       allocate_buckets(new_bktsize);
 
-      // Copy values to the new buckets
       unsigned int values = 0;
+
+      // Copy values to the new buckets
       for (unsigned int idx = 0; idx < src_bktsize; ++idx) {
           int record_num = src_buckets[idx].get_record_num();
+          std::pair<K_T, V_T> *records = src_buckets[idx].get_records();
           for (int i = 0; i < record_num; ++i) {
-              std::pair<K_T, V_T> &rec = src_buckets[idx].get_records()[i];
-              unsigned int bucket_idx = get_hash_value(rec.first);
-              auto ret = buckets_[bucket_idx].insert(rec.first, rec.second);
-              if (ret.second) {
-                  values += 1;
-              }
+              unsigned int bucket_idx = get_hash_value(records[i].first);
+              buckets_[bucket_idx].insert_nocheck(records[i].first, records[i].second);
+              values += 1;
           }
       }
 
